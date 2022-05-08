@@ -3,8 +3,12 @@ module backend-mono
 go 1.18
 
 require (
+	github.com/Masterminds/squirrel v1.5.2
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-kratos/kratos/v2 v2.2.2
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/jmoiron/sqlx v1.2.0
+	github.com/lib/pq v1.10.4
 	github.com/zeromicro/go-zero v1.3.3
 )
 
@@ -22,6 +26,8 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/justinas/alice v1.2.0 // indirect
+	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
+	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect

@@ -4,13 +4,22 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
+	"os"
 	"time"
 )
 
+func Trace() log.Valuer {
+	return func(ctx context.Context) interface{} {
+		s := ctx.Value("trace_id").(string)
+		return s
+	}
+}
 func NewContextLog(ctx context.Context) *log.Helper {
-	logHelper := log.NewHelper(log.DefaultLogger)
-	logHelper.WithContext(ctx)
-	return logHelper
+	logger := log.With(log.NewStdLogger(os.Stdout),
+		"trace", Trace(),
+	)
+	logger = log.With(logger, "ts", log.DefaultTimestamp, "caller", log.DefaultCaller)
+	return log.NewHelper(logger).WithContext(ctx)
 }
 
 func GenerateTraceID(serviceName string) string {
