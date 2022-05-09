@@ -1,0 +1,10 @@
+http:
+  path: localhost
+  port: 8000
+database:
+  driver: mysql
+  source: dev:dev@tcp(localhost:3306)/lms
+redis:
+  address: 127.0.0.1:6379
+  read_timeout: 0.2s
+  write_timeout: 0.2s
