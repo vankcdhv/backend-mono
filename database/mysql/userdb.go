@@ -5,6 +5,7 @@ import (
 	"backend-mono/database/model"
 	"backend-mono/database/repo"
 	"context"
+	"database/sql"
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -34,8 +35,21 @@ func (u *UserDB) Close() {
 }
 
 func (u *UserDB) Create(ctx context.Context, in *repo.CreateUserIn) (*repo.CreateUserOut, error) {
+	ctxLogger := logger.NewContextLog(ctx)
+	db := sq.Insert(u.table).Columns(GetListColumn(in)...).Values(GetListValues(in)...)
+	query, arg, err := db.ToSql()
+	if err != nil {
+		ctxLogger.Errorf("Failed while build query - error: %s", err.Error())
+		return nil, err
+	}
+	result := u.connection.MustExec(query, arg...)
+	insertedID, err := result.LastInsertId()
+	if err != nil {
+		ctxLogger.Errorf("Failed while insert user to database: %s", err.Error())
+		return nil, err
+	}
 	return &repo.CreateUserOut{
-		Message: "create user successfully",
+		ID: insertedID,
 	}, nil
 }
 
@@ -55,11 +69,10 @@ func (u *UserDB) FindByID(ctx context.Context, i int64) (*model.User, error) {
 	}
 	err = u.connection.Select(&result, query, arg...)
 	if err != nil {
-		ctxLogger.Errorf("Failed while build query - error: %s", err.Error())
-		return nil, err
-	}
-	if err != nil {
-		ctxLogger.Errorf("Failed while parse result", err.Error())
+		if err == sql.ErrNoRows {
+			ctxLogger.Errorf("Don't have user with ID %d - error: %s", i, err.Error())
+		}
+		ctxLogger.Errorf("Failed while select user by ID %d - error: %s", i, err.Error())
 		return nil, err
 	}
 	return result[0], nil

@@ -8,7 +8,6 @@ require (
 	github.com/go-kratos/kratos/v2 v2.2.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/jmoiron/sqlx v1.2.0
-	github.com/lib/pq v1.10.4
 	github.com/zeromicro/go-zero v1.3.3
 )
 

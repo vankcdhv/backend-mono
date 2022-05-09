@@ -11,7 +11,7 @@ type CreateUserIn struct {
 }
 
 type CreateUserOut struct {
-	Message string `json:"message"`
+	ID int64 `json:"id"`
 }
 
 // UserRepo Interface for user repository.
