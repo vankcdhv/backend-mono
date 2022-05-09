@@ -2,16 +2,14 @@ package main
 
 import (
 	"backend-mono/cmd/config"
+	"backend-mono/cmd/database/mysql"
 	"backend-mono/cmd/handler"
 	"backend-mono/cmd/svc"
 	config2 "backend-mono/core/config"
-	"backend-mono/database/mysql"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-
-	_ "github.com/spf13/viper/remote"
 )
 
 var (
@@ -51,7 +49,6 @@ func getBootstrapConfig() *config.Config {
 func main() {
 	flag.Parse()
 	initConfig()
-	getBootstrapConfig()
 	c := getBootstrapConfig()
 
 	userDb, err := mysql.NewUserDB()

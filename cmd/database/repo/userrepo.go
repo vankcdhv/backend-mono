@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"backend-mono/database/model"
+	"backend-mono/cmd/database/model"
 	"context"
 )
 

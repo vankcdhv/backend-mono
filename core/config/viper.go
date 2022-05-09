@@ -1,7 +1,7 @@
 package config
 
 import (
-	"backend-mono/utils/constant"
+	"backend-mono/cmd/utils/constant"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/spf13/viper"
 	_ "github.com/spf13/viper/remote"

@@ -1,6 +1,8 @@
 package types
 
-import "backend-mono/database/model"
+import (
+	"backend-mono/cmd/database/model"
+)
 
 type CreateUserRequest struct {
 	FirstName string `json:"first_name"`

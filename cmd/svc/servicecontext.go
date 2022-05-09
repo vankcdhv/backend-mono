@@ -2,7 +2,7 @@ package svc
 
 import (
 	"backend-mono/cmd/config"
-	"backend-mono/database/repo"
+	"backend-mono/cmd/database/repo"
 )
 
 type ServiceContext struct {

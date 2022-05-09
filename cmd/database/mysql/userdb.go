@@ -1,9 +1,9 @@
 package mysql
 
 import (
+	"backend-mono/cmd/database/model"
+	"backend-mono/cmd/database/repo"
 	"backend-mono/core/logger"
-	"backend-mono/database/model"
-	"backend-mono/database/repo"
 	"context"
 	"database/sql"
 	sq "github.com/Masterminds/squirrel"
