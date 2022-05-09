@@ -8,4 +8,5 @@ import (
 func RegisterHandlers(router *gin.Engine, serverCtx *svc.ServiceContext) {
 	router.GET("/greet/:user_id", GreetHandler(serverCtx))
 	router.POST("/user", CreateUserHandler(serverCtx))
+	router.GET("/user/:user_id", GetUserByIDHandler(serverCtx))
 }

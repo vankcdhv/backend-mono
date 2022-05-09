@@ -28,9 +28,9 @@ func (l *GreetLogic) GreetMessage(input *types.GreetRequest) (*types.GreetRespon
 	user, err := l.svcCtx.UserRepo.FindByID(l.ctx, input.UserID)
 	if err != nil {
 		return &types.GreetResponse{
-			Code:    http.StatusBadRequest,
-			Message: err.Error(),
-		}, nil
+			Code:  http.StatusBadRequest,
+			Error: err.Error(),
+		}, err
 	}
 	message := fmt.Sprintf("%s%s", "Hello user ", user.LastName)
 	return &types.GreetResponse{
