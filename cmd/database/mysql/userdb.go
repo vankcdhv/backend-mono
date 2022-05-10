@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"backend-mono/cmd/config"
 	"backend-mono/cmd/database/model"
 	"backend-mono/cmd/database/repo"
 	"backend-mono/core/logger"
@@ -16,8 +17,8 @@ type UserDB struct {
 	connection *sqlx.DB
 }
 
-func NewUserDB() (*UserDB, error) {
-	db, err := sqlx.Open("mysql", "dev:dev@tcp(127.0.0.1:3306)/lms")
+func NewUserDB(c config.Config) (*UserDB, error) {
+	db, err := sqlx.Open(c.Database.Driver, c.Database.Source)
 	if err != nil {
 		return nil, err
 	}

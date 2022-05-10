@@ -4,6 +4,7 @@ import (
 	"backend-mono/cmd/config"
 	"backend-mono/cmd/database/mysql"
 	"backend-mono/cmd/handler"
+	"backend-mono/cmd/service"
 	"backend-mono/cmd/svc"
 	config2 "backend-mono/core/config"
 	"flag"
@@ -51,12 +52,14 @@ func main() {
 	initConfig()
 	c := getBootstrapConfig()
 
-	userDb, err := mysql.NewUserDB()
+	jwtService := service.NewJWTService()
+
+	userDb, err := mysql.NewUserDB(*c)
 	if err != nil {
 		panic(err)
 	}
 
-	serverCtx := svc.NewServiceContext(*c, userDb)
+	serverCtx := svc.NewServiceContext(*c, userDb, jwtService)
 	router := gin.Default()
 
 	handler.RegisterHandlers(router, serverCtx)

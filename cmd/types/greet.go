@@ -1,7 +1,7 @@
 package types
 
 type GreetRequest struct {
-	UserID int64 `uri:"user_id" json:"user_id"`
+	UserID int64 `uri:"user_id" json:"user_id" binding:"required"`
 }
 
 type GreetResponse struct {

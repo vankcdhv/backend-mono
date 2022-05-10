@@ -7,6 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-kratos/kratos/v2 v2.2.2
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/golang-jwt/jwt/v4 v4.2.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/spf13/viper v1.11.0
 	google.golang.org/protobuf v1.28.0
