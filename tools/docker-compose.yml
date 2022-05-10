@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  service_discovery:
+    image: consul
+    command: agent -dev -client 0.0.0.0 -ui
+    ports:
+      - "8500:8500"
+  rabbitmq:
+    image: rabbitmq:3.7-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: dev
+      RABBITMQ_DEFAULT_PASS: dev
+      RABBITMQ_DEFAULT_VHOST: vhost
+
+  mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: dev
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+      MYSQL_DATABASE: lms
+      MYSQL_ROOT_HOST: "%"
+
+  redis:
+    image: redis:3.2
+    ports:
+      - "6379:6379"
