@@ -10,9 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"net/http"
+	"strconv"
 )
 
-const BearerSchema = "Bearer"
+const BearerSchema = "Bearer "
 
 func JWTMiddleware(svcContext *svc.ServiceContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -34,13 +35,13 @@ func JWTMiddleware(svcContext *svc.ServiceContext) gin.HandlerFunc {
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
-			userID, ok := value.(int64)
-			if !ok {
+			userID, err := strconv.ParseInt(value.(string), 10, 64)
+			if err != nil {
 				ctxLogger.Infof("Invalid type of user id")
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
-			_, err := svcContext.UserRepo.FindByID(ctx, userID)
+			_, err = svcContext.UserRepo.FindByID(ctx, userID)
 			if err != nil {
 				if err == sql.ErrNoRows {
 					c.AbortWithStatus(http.StatusUnauthorized)
@@ -49,7 +50,7 @@ func JWTMiddleware(svcContext *svc.ServiceContext) gin.HandlerFunc {
 				}
 				return
 			}
-			c.Header("x-user-id", fmt.Sprintf("%d", userID))
+			c.Request.Header.Add("x-user-id", fmt.Sprintf("%d", userID))
 			c.Next()
 		} else {
 			c.AbortWithStatus(http.StatusUnauthorized)

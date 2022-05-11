@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/spf13/viper"
+	"strconv"
 	"time"
 )
 
@@ -46,11 +47,15 @@ func NewJWTService() JWTService {
 }
 
 func (j *jwtServices) GenerateToken(userID string) (string, error) {
-	expiredTime := time.Duration(viper.GetInt64("jwt.expired"))
+	configExpired, err := strconv.ParseInt(viper.GetString("jwt.expired"), 10, 64)
+	if err != nil {
+		configExpired = 24
+	}
+	expiredTime := time.Now().Add(time.Duration(configExpired) * time.Hour)
 	claims := &AuthCustomClaims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiredTime)),
+			ExpiresAt: jwt.NewNumericDate(expiredTime),
 			Issuer:    j.issure,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
