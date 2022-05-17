@@ -3,11 +3,12 @@ http:
   port: 8000
 database:
   driver: mysql
-  source: dev:dev@tcp(localhost:3306)/lms
+  source: dev:dev@tcp(localhost:3306)/db_backend
 redis:
+  network: tcp
   address: 127.0.0.1:6379
-  read_timeout: 0.2s
-  write_timeout: 0.2s
+  username: dev
+  password: dev
 jwt:
   secret: abcdefgh
   issuer: api

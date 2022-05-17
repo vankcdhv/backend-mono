@@ -2,9 +2,7 @@ package main
 
 import (
 	"backend-mono/cmd/config"
-	"backend-mono/cmd/database/mysql"
 	"backend-mono/cmd/handler"
-	"backend-mono/cmd/service"
 	"backend-mono/cmd/svc"
 	config2 "backend-mono/core/config"
 	"flag"
@@ -41,9 +39,6 @@ func getBootstrapConfig() *config.Config {
 	if err := viper.UnmarshalKey("database", &bc.Database); err != nil {
 		panic(err)
 	}
-	if err := viper.UnmarshalKey("redis", &bc.Redis); err != nil {
-		panic(err)
-	}
 	return bc
 }
 
@@ -52,20 +47,13 @@ func main() {
 	initConfig()
 	c := getBootstrapConfig()
 
-	jwtService := service.NewJWTService()
-
-	userDb, err := mysql.NewUserDB(*c)
-	if err != nil {
-		panic(err)
-	}
-
-	serverCtx := svc.NewServiceContext(*c, userDb, jwtService)
+	serverCtx := svc.NewServiceContext(*c)
 	router := gin.Default()
 
 	handler.RegisterHandlers(router, serverCtx)
 
 	fmt.Printf("Starting server at %s:%s...\n", c.Http.Path, c.Http.Port)
-	err = router.Run(fmt.Sprintf("%s:%s", c.Http.Path, c.Http.Port))
+	err := router.Run(fmt.Sprintf("%s:%s", c.Http.Path, c.Http.Port))
 	if err != nil {
 		panic(err)
 	}

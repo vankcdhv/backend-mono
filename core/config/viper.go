@@ -1,7 +1,7 @@
 package config
 
 import (
-	"backend-mono/cmd/utils/constant"
+	"backend-mono/core/constants"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/spf13/viper"
 	_ "github.com/spf13/viper/remote"
@@ -16,7 +16,7 @@ type Viper struct {
 }
 
 func (c *Viper) InitConfig() error {
-	if c.ConfigType == constant.ConfigTypeFile {
+	if c.ConfigType == constants.ConfigTypeFile {
 		return c.LoadConfigFromFile()
 	} else {
 		return c.LoadConfigFromConsul()

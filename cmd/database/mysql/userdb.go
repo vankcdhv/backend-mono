@@ -13,18 +13,22 @@ import (
 )
 
 type UserDB struct {
-	table      string
-	connection *sqlx.DB
+	table               string
+	connection          *sqlx.DB
+	IgnoreInsertColumns []string
+	DatetimeColumns     []string
 }
 
-func NewUserDB(c config.Config) (*UserDB, error) {
+func NewUserDB(c config.Config) (repo.UserRepo, error) {
 	db, err := sqlx.Open(c.Database.Driver, c.Database.Source)
 	if err != nil {
 		return nil, err
 	}
 	return &UserDB{
-		table:      "users",
-		connection: db,
+		table:               "users",
+		connection:          db,
+		IgnoreInsertColumns: []string{"id"},
+		DatetimeColumns:     []string{"password_reminder_expire", "created_at", "updated_at"},
 	}, nil
 }
 
@@ -37,7 +41,7 @@ func (u *UserDB) Close() {
 
 func (u *UserDB) Create(ctx context.Context, in *repo.CreateUserIn) (*repo.CreateUserOut, error) {
 	ctxLogger := logger.NewContextLog(ctx)
-	db := sq.Insert(u.table).Columns(GetListColumn(in)...).Values(GetListValues(in)...)
+	db := sq.Insert(u.table).Columns(GetListColumn(in, u.IgnoreInsertColumns, []string{})...).Values(GetListValues(in, u.IgnoreInsertColumns, u.DatetimeColumns)...)
 	query, arg, err := db.ToSql()
 	if err != nil {
 		ctxLogger.Errorf("Failed while build query - error: %s", err.Error())
@@ -62,7 +66,7 @@ func (u *UserDB) FindByID(ctx context.Context, i int64) (*model.User, error) {
 	ctxLogger := logger.NewContextLog(ctx)
 	var result []*model.User
 
-	db := sq.Select("*").From(u.table).Where(sq.Eq{"id": i})
+	db := sq.Select(GetListColumn(&model.User{}, []string{}, u.DatetimeColumns)...).From(u.table).Where(sq.Eq{"id": i})
 	query, arg, err := db.ToSql()
 	if err != nil {
 		ctxLogger.Errorf("Failed while build query - error: %s", err.Error())
